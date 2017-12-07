@@ -10,19 +10,27 @@ import Foundation
 
 internal struct VariableExtractor: TokenExtractor {
     private let identifierExtractor: IdentifierExtractor
+    private let prefix: Character?
     
-    init(operatorTokens: OperatorTokenSet) {
-        identifierExtractor = IdentifierExtractor(operatorTokens: operatorTokens)
+    init(operatorTokens: OperatorTokenSet, variablePrefix: Character?) {
+        identifierExtractor = IdentifierExtractor(operatorTokens: operatorTokens, prefix: variablePrefix)
+        prefix = variablePrefix
     }
     
     func matchesPreconditions(_ buffer: TokenCharacterBuffer) -> Bool {
-        return buffer.peekNext() == "$"
+        if let prefix = prefix {
+            return buffer.peekNext() == prefix
+        } else {
+            return buffer.peekNext() != nil
+        }
     }
     
     func extract(_ buffer: TokenCharacterBuffer) -> TokenIterator.Element {
         let start = buffer.currentIndex
-        
-        buffer.consume() // consume the opening $
+
+        if prefix != nil {
+            buffer.consume() // consume the opening $
+        }
         
         guard identifierExtractor.matchesPreconditions(buffer) else {
             // the stuff that follow "$" must be a valid identifier

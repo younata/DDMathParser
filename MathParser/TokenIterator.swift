@@ -16,7 +16,7 @@ internal final class TokenIterator: IteratorProtocol {
     
     internal let operatorSet: OperatorSet
     
-    init(string: String, operatorSet: OperatorSet, locale: Locale?) {
+    init(string: String, operatorSet: OperatorSet, locale: Locale?, variablePrefix: Character?) {
         self.operatorSet = operatorSet
         let operatorTokens = operatorSet.operatorTokenSet
         
@@ -36,12 +36,12 @@ internal final class TokenIterator: IteratorProtocol {
             SpecialNumberExtractor(),
             ExponentExtractor(),
             
-            VariableExtractor(operatorTokens: operatorTokens),
+            VariableExtractor(operatorTokens: operatorTokens, variablePrefix: variablePrefix),
             QuotedVariableExtractor(),
             
             OperatorExtractor(operatorTokens: operatorTokens),
             
-            IdentifierExtractor(operatorTokens: operatorTokens)
+            IdentifierExtractor(operatorTokens: operatorTokens, prefix: variablePrefix)
         ]
     }
     

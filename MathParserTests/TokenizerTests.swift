@@ -134,6 +134,20 @@ class TokenizerTests: XCTestCase {
         XCTAssertEqual(tokens.count, 1)
         TestToken(tokens[0], kind: .variable, string: "foo")
     }
+
+    func testBareVariable() {
+        guard let tokens = XCTAssertNoThrows(try Tokenizer(string: "foo", variablePrefix: nil).tokenize()) else { return }
+
+        XCTAssertEqual(tokens.count, 1)
+        TestToken(tokens[0], kind: .variable, string: "foo")
+    }
+
+    func testOtherPrefixedVariable() {
+        guard let tokens = XCTAssertNoThrows(try Tokenizer(string: "#foo", variablePrefix: "#").tokenize()) else { return }
+
+        XCTAssertEqual(tokens.count, 1)
+        TestToken(tokens[0], kind: .variable, string: "foo")
+    }
     
     func testDoubleQuotedVariable() {
         guard let tokens = XCTAssertNoThrows(try Tokenizer(string: "\"foo\"").tokenize()) else { return }

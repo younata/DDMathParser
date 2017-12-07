@@ -122,6 +122,22 @@ class TokenResolverTests: XCTestCase {
         XCTAssertEqual(tokens.count, 1)
         TestToken(tokens[0], kind: .variable("foo"), string: "foo")
     }
+
+    func testBareVariable() {
+        let r = TokenResolver(string: "foo", variablePrefix: nil)
+        guard let tokens = XCTAssertNoThrows(try r.resolve()) else { return }
+
+        XCTAssertEqual(tokens.count, 1)
+        TestToken(tokens[0], kind: .variable("foo"), string: "foo")
+    }
+
+    func testDifferentlyPrefixedVariable() {
+        let r = TokenResolver(string: "#foo", variablePrefix: "#")
+        guard let tokens = XCTAssertNoThrows(try r.resolve()) else { return }
+
+        XCTAssertEqual(tokens.count, 1)
+        TestToken(tokens[0], kind: .variable("foo"), string: "foo")
+    }
     
     func testIdentifier() {
         let r = TokenResolver(string: "foo", options: [])

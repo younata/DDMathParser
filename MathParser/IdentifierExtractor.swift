@@ -10,15 +10,17 @@ import Foundation
 
 internal struct IdentifierExtractor: TokenExtractor {
     let operatorTokens: OperatorTokenSet
+    let prefix: Character?
     
-    init(operatorTokens: OperatorTokenSet) {
+    init(operatorTokens: OperatorTokenSet, prefix: Character?) {
         self.operatorTokens = operatorTokens
+        self.prefix = prefix
     }
     
     func matchesPreconditions(_ buffer: TokenCharacterBuffer) -> Bool {
         // An identifier can't start with these, because other things already do
         let next = buffer.peekNext()
-        return next != "$" && next?.isDigit == false && next != "\"" && next != "'"
+        return next != prefix && next?.isDigit == false && next != "\"" && next != "'"
     }
     
     func extract(_ buffer: TokenCharacterBuffer) -> TokenIterator.Element {

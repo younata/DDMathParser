@@ -28,6 +28,24 @@ class ExpressionTests: XCTestCase {
             return
         }
     }
+
+    func testBareVariable() {
+        guard let e = XCTAssertNoThrows(try Expression(string: "foo", variablePrefix: nil)) else { return }
+
+        guard case .variable("foo") = e.kind else {
+            XCTFail("Unexpected expression kind: \(e.kind)")
+            return
+        }
+    }
+
+    func testDifferentlyPrefixedVariable() {
+        guard let e = XCTAssertNoThrows(try Expression(string: "#foo", variablePrefix: "#")) else { return }
+
+        guard case .variable("foo") = e.kind else {
+            XCTFail("Unexpected expression kind: \(e.kind)")
+            return
+        }
+    }
     
     func testSimpleFunction() {
         guard let e = XCTAssertNoThrows(try Expression(string: "foo()")) else { return }

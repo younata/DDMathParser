@@ -26,6 +26,12 @@ class EvaluatorTests: XCTestCase {
         guard let d = XCTAssertNoThrows(try "$foo".evaluate(["foo": sub])) else { return }
         XCTAssertEqual(d, 42)
     }
+
+    func testBareVariable() {
+        guard let e = XCTAssertNoThrows(try Expression(string: "foo", variablePrefix: nil)) else { return }
+        guard let d = XCTAssertNoThrows(try Evaluator.default.evaluate(e, substitutions: ["foo": 42])) else { return }
+        XCTAssertEqual(d, 42)
+    }
     
     func testFunction() {
         guard let d = XCTAssertNoThrows(try "1 + 2".evaluate()) else { return }
